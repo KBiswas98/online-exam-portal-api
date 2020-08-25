@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const { studentLavel } = require("../helper/accessLavel");
 
 exports.generateStudentAccessToken = (message) => {
     return jwt.sign(message, process.env.JWT_SEC_STUDENT, {
@@ -8,8 +7,6 @@ exports.generateStudentAccessToken = (message) => {
 };
 
 exports.studentAuthenticateToken = (req, res, next) => {
-    console.log(">>>>>>>>>>>>>>>>..");
-    console.log(req.headers);
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     if (token == null) return res.sendStatus(401);

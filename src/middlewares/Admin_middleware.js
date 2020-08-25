@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const { adminLavel } = require("../helper/accessLavel");
 
 exports.generateAdminAccessToken = (message) => {
     return jwt.sign(message, process.env.JWT_SEC_ADMIN, {
