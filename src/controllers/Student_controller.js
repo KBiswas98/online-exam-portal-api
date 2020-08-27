@@ -48,10 +48,15 @@ exports.addStudent = (req, res, next) => {
                const obj = {
                     status: true,
                     message: "student added successfully",
-                    token: generateStudentAccessToken({
-                         id: data._id,
-                         weight: Date.now(),
-                    }),
+                    data: {
+                         email: req.body.email,
+                         name: req.body.name,
+                         token: generateStudentAccessToken({
+                              id: data._id,
+                              weight: Date.now(),
+                         }),
+                    },
+
                     //  object: data,
                };
                res.status(200).json(obj);
@@ -72,15 +77,34 @@ exports.showStudent = (req, res, next) => {
 };
 
 exports.singleStudent = (req, res, next) => {
-     Student.findById(req.params.id)
-          .then((result) => {
-               res.json({
-                    status: true,
-                    message: "Data from Student",
-                    data: result,
-               });
-          })
-          .catch((err) => res.status(400).json({ status: false, data: err }));
+     console.log(req.params);
+     let rgx = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+     if (!rgx.test(req.params.id)) {
+          Student.findById(req.params.id)
+               .then((result) => {
+                    res.json({
+                         status: true,
+                         message: "Data from Student",
+                         data: result,
+                    });
+               })
+               .catch((err) =>
+                    res.status(400).json({ status: false, data: err })
+               );
+     } else {
+          Student.find({ email: req.params.id })
+               .then((result) => {
+                    res.json({
+                         status: true,
+                         message: "Data from Student",
+                         data: result,
+                    });
+               })
+               .catch((err) =>
+                    res.status(400).json({ status: false, data: err })
+               );
+     }
 };
 
 exports.updateStudent = (req, res, next) => {
